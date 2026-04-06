@@ -1,16 +1,31 @@
-# React + Vite
+🌤 Weather Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive web app that lets users check real-time weather data for any city using a public API. Built with HTML, CSS, and JavaScript, and deployed on Vercel.
 
-Currently, two official plugins are available:
+🔗 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Weather Dashboard Live
 
-## React Compiler
+💻 Features
+Search for any city to get current weather information
+Displays temperature, humidity, and weather conditions
+Responsive and clean UI design
+Error handling for invalid city input
+Deployed and accessible online via Vercel
+🛠 Tech Stack
+Frontend: HTML, CSS, JavaScript
+API: OpenWeatherMap (or specify which weather API you used)
+Deployment: Vercel
+⚡ How It Works
+User enters a city in the search bar
+JavaScript fetches weather data from the API asynchronously
+UI updates dynamically to show temperature, humidity, and weather info
+Errors are handled gracefully if the city is not found
+🚀 Learnings
+API integration using fetch & async-await
+DOM manipulation for dynamic UI updates
+Handling asynchronous operations and errors
+Deploying web apps using Vercel
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+👤 Author
+Kulshreshth Singh Rana – Frontend Developer
