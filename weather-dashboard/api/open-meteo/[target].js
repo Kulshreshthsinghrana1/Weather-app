@@ -7,6 +7,22 @@ const ALLOWED_TARGETS = {
 
 const JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
+function buildQueryString(params) {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item !== undefined) query.append(key, item);
+      });
+    } else if (value !== undefined) {
+      query.append(key, value);
+    }
+  }
+
+  return query.toString();
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.setHeader("Allow", "GET, HEAD");
@@ -14,7 +30,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { target } = req.query;
+  const { target, ...query } = req.query;
 
   if (!target) {
     res.status(400).json({ error: "Missing Open-Meteo target" });
@@ -27,11 +43,10 @@ export default async function handler(req, res) {
     return;
   }
 
-  const queryStart = req.url.indexOf("?");
-  const querySuffix = queryStart === -1 ? "" : req.url.slice(queryStart);
-  const upstreamUrl = `${baseUrl}${querySuffix}`;
+  const queryString = buildQueryString(query);
+  const upstreamUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
-  console.log("proxy request", { target, upstreamUrl, querySuffix });
+  console.log("proxy request", { target, upstreamUrl, queryString });
 
   let upstreamResponse;
   try {
