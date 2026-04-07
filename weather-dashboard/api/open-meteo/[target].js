@@ -44,6 +44,10 @@ export default async function handler(req, res) {
   const queryString = buildQueryString(query);
   const upstreamUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
+  const upstreamUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+
+  console.log("proxy request", { target, upstreamUrl });
+
   let upstreamResponse;
   try {
     upstreamResponse = await fetch(upstreamUrl, {
@@ -53,6 +57,15 @@ export default async function handler(req, res) {
       },
     });
   } catch (proxyError) {
+    console.error("proxy failed", {
+      target,
+      upstreamUrl,
+      error: {
+        message: proxyError.message,
+        stack: proxyError.stack,
+        code: proxyError.code,
+      },
+    });
     res
       .status(502)
       .json({ error: "Unable to reach Open-Meteo. Try again later." });
