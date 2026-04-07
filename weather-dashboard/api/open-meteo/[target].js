@@ -52,7 +52,6 @@ export default async function handler(req, res) {
   try {
     upstreamResponse = await fetch(upstreamUrl, {
       headers: {
-        "User-Agent": "weather-dashboard-vercel-proxy",
         Accept: "application/json",
       },
     });
