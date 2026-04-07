@@ -73,10 +73,12 @@ export default async function handler(req, res) {
 
   const responseText = await upstreamResponse.text();
   if (upstreamResponse.status >= 400) {
+    const snippet = responseText.slice(0, 300).replace(/\s+/g, " ");
     console.warn("upstream returned error", {
       status: upstreamResponse.status,
-      snippet: responseText.slice(0, 200),
+      snippet,
     });
+    console.log("upstream response snippet", snippet);
   }
   const contentType =
     upstreamResponse.headers.get("content-type") ?? JSON_CONTENT_TYPE;
