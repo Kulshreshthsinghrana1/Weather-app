@@ -1,5 +1,5 @@
 const ALLOWED_TARGETS = {
-  forecast: "https://api.open-meteo.com/v1/forecast",
+  forecast: "https://api.open-meteo.com/v1/gfs",
   archive: "https://archive-api.open-meteo.com/v1/archive",
   "air-quality": "https://air-quality-api.open-meteo.com/v1/air-quality",
   geocoding: "https://geocoding-api.open-meteo.com/v1/search",
@@ -46,8 +46,6 @@ export default async function handler(req, res) {
   const queryString = buildQueryString(query);
   const upstreamUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
-  console.log("proxy request", { target, upstreamUrl, queryString });
-
   let upstreamResponse;
   try {
     upstreamResponse = await fetch(upstreamUrl, {
@@ -72,14 +70,6 @@ export default async function handler(req, res) {
   }
 
   const responseText = await upstreamResponse.text();
-  if (upstreamResponse.status >= 400) {
-    const snippet = responseText.slice(0, 300).replace(/\s+/g, " ");
-    console.warn("upstream returned error", {
-      status: upstreamResponse.status,
-      snippet,
-    });
-    console.log("upstream response snippet", snippet);
-  }
   const contentType =
     upstreamResponse.headers.get("content-type") ?? JSON_CONTENT_TYPE;
 

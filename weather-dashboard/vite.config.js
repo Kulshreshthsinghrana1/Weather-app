@@ -5,7 +5,7 @@ const proxyRoutes = {
   "/api/open-meteo/forecast": {
     target: "https://api.open-meteo.com",
     changeOrigin: true,
-    rewrite: (path) => path.replace(/^\/api\/open-meteo\/forecast/, "/v1/forecast"),
+    rewrite: (path) => path.replace(/^\/api\/open-meteo\/forecast/, "/v1/gfs"),
   },
   "/api/open-meteo/archive": {
     target: "https://archive-api.open-meteo.com",
