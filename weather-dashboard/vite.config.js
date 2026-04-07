@@ -3,9 +3,18 @@ import react from "@vitejs/plugin-react";
 
 const proxyRoutes = {
   "/api/open-meteo/forecast": {
-    target: "https://api.open-meteo.com",
+    target: "https://api.met.no",
     changeOrigin: true,
-    rewrite: (path) => path.replace(/^\/api\/open-meteo\/forecast/, "/v1/gfs"),
+    headers: {
+      "User-Agent":
+        "WeatherDashboard/1.0 https://github.com/Kulshreshthsinghrana1/Weather-app",
+      Accept: "application/json",
+    },
+    rewrite: (path) =>
+      path.replace(
+        /^\/api\/open-meteo\/forecast/,
+        "/weatherapi/locationforecast/2.0/compact",
+      ),
   },
   "/api/open-meteo/archive": {
     target: "https://archive-api.open-meteo.com",

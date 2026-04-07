@@ -16,6 +16,8 @@ import "./App.css";
 const PAGE_CURRENT = "current";
 const PAGE_HISTORY = "history";
 const TODAY = toISODate(new Date());
+const DEFAULT_TIMEZONE =
+  Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 const SINGLE_DAY_MIN = shiftYears(TODAY, -2);
 const SINGLE_DAY_MAX = shiftDays(TODAY, 7);
 const DEFAULT_RANGE_START = shiftDays(TODAY, -30);
@@ -161,6 +163,7 @@ function App() {
   const [page, setPage] = useState(PAGE_CURRENT);
   const [lat, setLat] = useState(null);
   const [lon, setLon] = useState(null);
+  const [locationTimezone, setLocationTimezone] = useState(DEFAULT_TIMEZONE);
   const [locationLabel, setLocationLabel] = useState("Current location");
   const [searchInput, setSearchInput] = useState("");
   const [selectedDate, setSelectedDate] = useState(TODAY);
@@ -187,6 +190,7 @@ function App() {
       (position) => {
         setLat(position.coords.latitude);
         setLon(position.coords.longitude);
+        setLocationTimezone(DEFAULT_TIMEZONE);
         setLocationLabel("Current location");
       },
       () => {
@@ -219,7 +223,7 @@ function App() {
             "temperature_2m,relative_humidity_2m,precipitation,precipitation_probability,visibility,wind_speed_10m,wind_direction_10m,weather_code",
           daily:
             "weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,precipitation_sum,wind_speed_10m_max",
-          timezone: "auto",
+          timezone: locationTimezone,
         });
 
         if (!isPastDay && selectedDate === TODAY) {
@@ -237,7 +241,7 @@ function App() {
           start_date: selectedDate,
           end_date: selectedDate,
           hourly: "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide",
-          timezone: "auto",
+          timezone: locationTimezone,
         });
 
         if (selectedDate === TODAY) {
@@ -275,7 +279,7 @@ function App() {
       weatherController.abort();
       airController.abort();
     };
-  }, [lat, lon, selectedDate]);
+  }, [lat, lon, locationTimezone, selectedDate]);
 
   useEffect(() => {
     if (lat === null || lon === null || !startDate || !endDate) {
@@ -308,7 +312,7 @@ function App() {
           end_date: endDate,
           daily:
             "temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max",
-          timezone: "auto",
+          timezone: locationTimezone,
         });
 
         const response = await fetchJson(
@@ -331,7 +335,7 @@ function App() {
     loadHistory();
 
     return () => controller.abort();
-  }, [lat, lon, startDate, endDate]);
+  }, [lat, lon, locationTimezone, startDate, endDate]);
 
   async function handleSearch(event) {
     event.preventDefault();
@@ -360,6 +364,7 @@ function App() {
       const [result] = data.results;
       setLat(result.latitude);
       setLon(result.longitude);
+      setLocationTimezone(result.timezone || DEFAULT_TIMEZONE);
       setLocationLabel(buildSearchLabel(result));
     } catch {
       setError("City lookup failed. Please try again.");
